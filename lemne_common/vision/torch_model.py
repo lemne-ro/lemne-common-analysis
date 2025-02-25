@@ -38,7 +38,7 @@ class TorchModel():
             raise NotImplementedError
         
         if checkpoint is not None:
-            model.load_state_dict(torch.load(checkpoint))
+            model.load_state_dict(torch.load(checkpoint, map_location=torch.device('cpu')))
 
         return model
     
