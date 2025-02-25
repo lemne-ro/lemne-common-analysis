@@ -38,13 +38,13 @@ class BaseWorker():
             config.MINIO_SERVER,
             access_key=config.MINIO_ACCESS,
             secret_key=config.MINIO_SECRET,
-            secure=False
+            secure=True
         )
         self.minio_input = config.INPUT_BUCKET
         self.minio_debug = config.DEBUG_BUCKET
 
-        if not self.minio.bucket_exists(self.minio_debug):
-            self.minio.make_bucket(self.minio_debug)
+        # if not self.minio.bucket_exists(self.minio_debug):
+        #     self.minio.make_bucket(self.minio_debug)
 
         self.logger.info(f'{self.type} with ID: {self.id} connected to MINIO {config.MINIO_ACCESS} on {config.MINIO_SERVER} using buckets: {config.PRIVATE_BUCKET} {config.INPUT_BUCKET} {config.DEBUG_BUCKET}!')
 
