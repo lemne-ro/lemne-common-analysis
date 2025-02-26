@@ -40,13 +40,13 @@ class BaseWorker():
             secret_key=config.MINIO_SECRET,
             secure=True
         )
-        self.minio_input = config.INPUT_BUCKET
+        # self.minio_input = config.INPUT_BUCKET
         self.minio_debug = config.DEBUG_BUCKET
 
         # if not self.minio.bucket_exists(self.minio_debug):
         #     self.minio.make_bucket(self.minio_debug)
 
-        self.logger.info(f'{self.type} with ID: {self.id} connected to MINIO {config.MINIO_ACCESS} on {config.MINIO_SERVER} using buckets: {config.PRIVATE_BUCKET} {config.INPUT_BUCKET} {config.DEBUG_BUCKET}!')
+        self.logger.info(f'{self.type} with ID: {self.id} connected to MINIO {config.MINIO_ACCESS} on {config.MINIO_SERVER}!')
 
         # os.makedirs('./tmp', exist_ok=True)
 
@@ -88,9 +88,9 @@ class BaseWorker():
     def deliver(self, res):
         self.prod.produce(self.topic_val, res, callback=self.deliver_callback_)
 
-    def get_image(self, path):
+    def get_image(self, bucket, path):
         try:
-            response = self.minio.get_object(self.minio_input, path)
+            response = self.minio.get_object(bucket, path)
             img = cv.imdecode(np.frombuffer(response.data, dtype=np.uint8), cv.IMREAD_COLOR)
             response.close()
             response.release_conn()
@@ -99,10 +99,10 @@ class BaseWorker():
             return None
         return img
 
-    # def get_video(self, path):
+    # def get_video(self, bucket, path):
     #     try:
     #         vid = os.path.join('./tmp', f'{self.type}_{self.id}_{os.path.basename(path)}')
-    #         self.minio.fget_object(self.minio_input, path , vid)
+    #         self.minio.fget_object(bucket, path , vid)
     #         idx = str.rindex(vid, '.')
     #         vout = vid[:idx] + '_copy' + vid[idx:]
     #         ffmpeg.input(vid).output(vout).overwrite_output().run()
