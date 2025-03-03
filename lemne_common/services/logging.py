@@ -1,11 +1,12 @@
 import io
 import logging
+import sys
 
 
 def get_logger(name):
     logger = logging.getLogger(name)
     logger.setLevel(logging.INFO)
-    handler = logging.StreamHandler()
+    handler = logging.StreamHandler(sys.stdout)
     # formatter = logging.Formatter('%(asctime)s [%(name)-12s] %(levelname)-8s %(message)s')
     formatter = logging.Formatter('%(asctime)s %(levelname)-8s %(message)s')
     handler.setFormatter(formatter)
