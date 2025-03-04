@@ -38,7 +38,7 @@ class BaseWorker():
             config.MINIO_SERVER,
             access_key=config.MINIO_ACCESS,
             secret_key=config.MINIO_SECRET,
-            secure=True
+            secure=False
         )
         # self.minio_input = config.INPUT_BUCKET
         self.minio_debug = config.DEBUG_BUCKET
