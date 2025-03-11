@@ -34,11 +34,15 @@ class BaseWorker():
 
         self.logger.info(f'{self.type} with ID: {self.id} connected to Kafka {config.KAFKA_SERVER} on {config.TOPIC_REQ}!')
 
+        minio_secure = False
+        if len(config.MINIO_SERVER.split(':')) > 0:
+            minio_secure = config.MINIO_SERVER.split(':')[1] == '443'
+
         self.minio = Minio(
             config.MINIO_SERVER,
             access_key=config.MINIO_ACCESS,
             secret_key=config.MINIO_SECRET,
-            secure=False
+            secure=minio_secure
         )
         # self.minio_input = config.INPUT_BUCKET
         self.minio_debug = config.DEBUG_BUCKET
