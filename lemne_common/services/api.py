@@ -35,8 +35,8 @@ class JSON():
         res = json.dumps(res, indent=4)
         return res
 
-    def response(self, id, req, result, type):
-        res = self.build_response(id, req, result, type)
+    def response(self, id, req, result, type, *args, **kwargs):
+        res = self.build_response(id, req, result, type, *args, **kwargs)
         res = self.encode(res)
         return res
 
