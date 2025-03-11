@@ -43,17 +43,29 @@ class TorchModel():
         return model
     
     def run(self, image):
-        image = self.transform(image)
-        image = image[None]
+        multi = image.ndim > 3
+
+        if not multi:
+            image = self.transform(image)
+            image = image[None]
+        else:
+            image = [self.transform(image[i]) for i in range(image.shape[0])]
+            image = torch.stack(image, dim=0)
 
         output = self.model(image)
         scores = F.softmax(output, dim=1)
         # scores, preds = torch.max(scores, 1)
 
-        scores = scores[0].detach().cpu().numpy()
+        scores = scores.detach().cpu().numpy()
 
-        result = {key: scores[i] for i, key in enumerate(self.classes)}
-
+        if not multi:
+            result = {key: scores[0, i] for i, key in enumerate(self.classes)}
+        else:
+            result = [
+                {key: scores[b, i] for i, key in enumerate(self.classes)}
+                for b in range(scores.shape[0])
+            ]
+        
         return result
 
 
